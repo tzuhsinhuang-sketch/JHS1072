@@ -302,7 +302,8 @@ def build(md_path: Path):
         lambda m: render_board_block(m.group(1)),
         body, flags=re.DOTALL
     )
-    title = md_path.stem
+    h1 = re.search(r'^#\s+(.+)$', md_text, re.MULTILINE)
+    title = h1.group(1) if h1 else md_path.stem
 
     html = f"""<!DOCTYPE html>
 <html lang="zh-TW">

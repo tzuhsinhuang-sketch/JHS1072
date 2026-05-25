@@ -1,6 +1,6 @@
 __pycache__/
 *.pyc
-*.html
 .claude/
 *.xlsx
 *.pdf
+_conventions.html

@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JHS1072</title>
+  <style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fa; --border: #d0d7de;
+  --text: #1f2328; --muted: #656d76; --accent: #0969da;
+  --accent-dim: rgba(9,105,218,.08);
+  --table-head: #f6f8fa; --row-alt: #f6f8fa; --code-bg: #f6f8fa;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 18px; }
+
+#sidebar {
+  position: fixed; top: 0; left: 0; width: 255px; height: 100vh;
+  overflow-y: auto; background: var(--surface); border-right: 1px solid var(--border);
+  padding: 24px 14px; font-size: 15px;
+}
+#sidebar .sidebar-title { font-size: 14px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 14px; padding: 0 8px; }
+#sidebar a { display: block; padding: 6px 10px; color: var(--muted); text-decoration: none; border-radius: 4px; transition: all .15s; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#sidebar a:hover { color: var(--accent); background: var(--accent-dim); }
+#sidebar .lv2 { font-weight: 600; color: var(--text); margin-top: 6px; }
+#sidebar .lv3 { padding-left: 22px; }
+
+#main { margin-left: 255px; max-width: 900px; padding: 48px 40px; }
+
+h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
+.meta { color: var(--muted); font-size: 15px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+
+h2 {
+  font-size: 20px; font-weight: 700; color: var(--text);
+  margin: 52px 0 18px; padding: 10px 14px;
+  background: var(--accent-dim);
+  border-left: 4px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+}
+h3 {
+  font-size: 17px; font-weight: 600; color: #0550ae;
+  margin: 32px 0 10px;
+}
+h4 {
+  font-size: 16px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: .09em; margin: 22px 0 8px;
+}
+
+p { margin-bottom: 12px; font-size: 16px; }
+ul, ol { font-size: 16px; margin: 6px 0 16px; padding-left: 22px; }
+li { margin-bottom: 4px; line-height: 1.6; }
+strong { color: var(--text); }
+
+table { width: 100%; border-collapse: collapse; margin: 12px 0 22px; font-size: 16px; }
+thead th { background: var(--table-head); color: var(--muted); font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
+tbody td { padding: 9px 14px; border: 1px solid var(--border); vertical-align: top; }
+tbody tr:nth-child(even) { background: var(--row-alt); }
+tbody tr:hover { background: rgba(9,105,218,.04); }
+
+pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 14px 18px; margin: 14px 0; font-size: 16px; overflow-x: auto; }
+code { font-family: "SFMono-Regular", Consolas, monospace; font-size: 15px; background: var(--code-bg); padding: 2px 5px; border-radius: 3px; }
+pre code { background: none; padding: 0; }
+
+blockquote { border-left: 3px solid var(--border); padding: 8px 14px; margin: 14px 0; color: var(--muted); font-size: 16px; }
+blockquote p { margin: 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+details { margin: 12px 0 22px; border: 1px solid var(--border); border-radius: 6px; }
+details summary { padding: 10px 14px; cursor: pointer; color: var(--accent); font-weight: 600; user-select: none; list-style: none; }
+details summary::-webkit-details-marker { display: none; }
+details summary::before { content: '▶ '; font-size: 14px; }
+details[open] summary::before { content: '▼ '; }
+details summary:hover { background: var(--accent-dim); border-radius: 6px; }
+details[open] summary { border-bottom: 1px solid var(--border); border-radius: 6px 6px 0 0; }
+details > .mermaid { padding: 20px; background: var(--surface); border-radius: 0 0 6px 6px; display: flex; justify-content: center; }
+#sidebar .toc-row { display: flex; align-items: center; margin-top: 6px; }
+#sidebar .toc-row a.lv2 { padding-left: 4px; margin-top: 0; flex: 1; }
+#sidebar .toc-arrow { font-size: 10px; color: var(--muted); cursor: pointer; padding: 6px 2px 6px 10px; user-select: none; flex-shrink: 0; }
+#sidebar .toc-arrow:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+<nav id="sidebar">
+  <div class="sidebar-title">目錄</div>
+  <div id="toc"></div>
+</nav>
+<main id="main">
+  <h1>JHS1072</h1>
+<p><strong>代號</strong>：JHS1072　｜　<strong>狀態</strong>：v0.1</p>
+<hr />
+<h2>快速概覽</h2>
+<blockquote>
+<p>以好運龍寶 Super Buy 為基底，3x3 主盤面搭配右側 3x1 倍數輪。中心格（1,1）為獨立中心輪，可出現三種特殊 WILD，各自帶有飛散或倍數疊加效果，最強的 WW3 同時具備兩者。</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>專案基底</td>
+<td>1052 好運龍寶 SuperBuy</td>
+</tr>
+<tr>
+<td>轉輪陣列</td>
+<td>主盤面：3x3　＋　中心輪（位置 1,1）＋　倍數輪：3x1（右側）</td>
+</tr>
+<tr>
+<td>賠付線數</td>
+<td>5 條固定賠付線</td>
+</tr>
+<tr>
+<td>特殊功能</td>
+<td>中心輪、特殊 WILD（WW1 / WW2 / WW3）、Extra Bet、Buy Feature × 2</td>
+</tr>
+</tbody>
+</table>
+<h3>符號一覽</h3>
+<table>
+<thead>
+<tr>
+<th>類型</th>
+<th>符號</th>
+<th>出現位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一般符號</td>
+<td>M1、M2、M3、A、K、Q、J</td>
+<td>主盤面、中心輪</td>
+</tr>
+<tr>
+<td>WILD</td>
+<td>WW</td>
+<td>主盤面、中心輪</td>
+</tr>
+<tr>
+<td>特殊 WILD</td>
+<td>WW1、WW2、WW3</td>
+<td>中心輪限定</td>
+</tr>
+<tr>
+<td>倍數符號</td>
+<td>共 13 種，依模式出現不同組合（詳見核心機制 › 倍數輪）</td>
+<td>倍數輪</td>
+</tr>
+</tbody>
+</table>
+<h3>特殊功能摘要</h3>
+<table>
+<thead>
+<tr>
+<th>功能</th>
+<th>一句話說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>中心輪</td>
+<td>獨立於主盤面的特殊轉輪，決定 WILD 效果種類</td>
+</tr>
+<tr>
+<td>WW1</td>
+<td>飛散 WW 至主盤面後結算</td>
+</tr>
+<tr>
+<td>WW2</td>
+<td>倍數輪三格相加後乘以盤面得分</td>
+</tr>
+<tr>
+<td>WW3</td>
+<td>WW1 ＋ WW2 雙效果同時觸發</td>
+</tr>
+<tr>
+<td>Extra Bet</td>
+<td>加注 1.5X，調整倍數輪符號組合</td>
+</tr>
+<tr>
+<td>Buy Feature 1</td>
+<td>100X 購買 10 次 Free Spins，WILD 機率提升</td>
+</tr>
+<tr>
+<td>Buy Feature 2</td>
+<td>500X 購買 10 次 Free Spins，必出 WILD</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>遊戲流程</h2>
+<details>
+<summary>Base Game 流程圖</summary>
+<div class="mermaid">
+graph LR
+    Idle([Idle])
+    Idle --> Spinning[Spin]
+    Spinning --> PeekQ{瞇牌？}
+    PeekQ -->|是| Peek[倍數輪瞇牌]
+    PeekQ -->|否| MultStop[停輪]
+    Peek --> MultStop
+    MultStop --> WinQ{中獎判斷}
+    WinQ -->|無得分| Idle
+    WinQ -->|有得分| ScoreFlow[得分流程]
+    ScoreFlow --> BigQ{大獎觸發？}
+    style ScoreFlow fill:#0d5c4a,stroke:#1de9b6,color:#fff
+    BigQ -->|否| CloseNo[收起贏分看板]
+    BigQ -->|是| CloseYes[收起贏分看板]
+    CloseNo --> Settle[分數結算]
+    CloseYes --> BigWin[大獎演出]
+    BigWin --> Settle
+    Settle --> Idle
+</div>
+</details>
+
+<details>
+<summary>得分流程</summary>
+<p><strong>一般 / WW</strong></p>
+<div class="mermaid">
+graph LR
+    Start([Start])
+    style Start fill:#0d5c4a,stroke:#1de9b6,color:#fff
+    Start --> ScoreAnim[符號得分演出]
+    ScoreAnim --> Board[贏分看板彈出]
+    Board --> MultQ{倍數 = 1X？}
+    MultQ -->|是| End([End])
+    MultQ -->|否| MultHit[倍數打擊看板表演]
+    MultHit --> End
+</div>
+<p><strong>WW1</strong></p>
+<div class="mermaid">
+graph LR
+    Start([Start])
+    style Start fill:#0d5c4a,stroke:#1de9b6,color:#fff
+    Start --> Scatter[WW飛散表演]
+    Scatter --> ScoreAnim[符號得分演出]
+    ScoreAnim --> Board[贏分看板彈出]
+    Board --> MultQ{倍數 = 1X？}
+    MultQ -->|是| End([End])
+    MultQ -->|否| MultHit[倍數打擊看板表演]
+    MultHit --> End
+</div>
+<p><strong>WW2</strong></p>
+<div class="mermaid">
+graph LR
+    Start([Start])
+    style Start fill:#0d5c4a,stroke:#1de9b6,color:#fff
+    Start --> ScoreAnim[符號得分演出]
+    ScoreAnim --> Expand[倍數輪中獎框擴展演出]
+    Expand --> Board[贏分看板彈出]
+    Board --> SumHit[三格倍數加總打進看板]
+    SumHit --> End([End])
+</div>
+<p><strong>WW3</strong></p>
+<div class="mermaid">
+graph LR
+    Start([Start])
+    style Start fill:#0d5c4a,stroke:#1de9b6,color:#fff
+    Start --> Scatter[WW飛散表演]
+    Scatter --> ScoreAnim[符號得分演出]
+    ScoreAnim --> Expand[倍數輪中獎框擴展演出]
+    Expand --> Board[贏分看板彈出]
+    Board --> SumHit[三格倍數加總打進看板]
+    SumHit --> End([End])
+</div>
+</details>
+
+<hr />
+<h2>核心機制</h2>
+<h3>基本遊戲</h3>
+<p>中獎規則：符號由最左至右連續出現方可獲獎。</p>
+<h3>中心輪</h3>
+<p>位於主盤面正中央（位置 1,1），為獨立轉輪，與其他轉輪分開滾動。</p>
+<table>
+<thead>
+<tr>
+<th>可出現符號</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一般符號</td>
+<td>同主盤面一般符號</td>
+</tr>
+<tr>
+<td>WW</td>
+<td>一般 WILD，可替代所有一般符號</td>
+</tr>
+<tr>
+<td>WW1 / WW2 / WW3</td>
+<td>特殊 WILD，僅出現於中心輪</td>
+</tr>
+</tbody>
+</table>
+<h3>特殊 WILD</h3>
+<p>所有特殊 WILD 除各自功能外，均具備一般 WILD 效果（可替代所有一般符號進行連線）。</p>
+<p>強度順序：<strong>WW3 &gt; WW2 ≥ WW1 &gt; 一般 WW</strong></p>
+<table>
+<thead>
+<tr>
+<th>符號</th>
+<th>名稱</th>
+<th>效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WW1</td>
+<td>分散 WILD</td>
+<td>以中心輪為起點向外飛散，隨機將 1～8 個 WW 落至主盤面其餘 8 格，不覆蓋原有 WW，飛散完成後進行結算</td>
+</tr>
+<tr>
+<td>WW2</td>
+<td>倍數 WILD</td>
+<td>倍數輪三格倍數相加後乘以主盤面得分（例：2X＋5X＋10X＝17X）</td>
+</tr>
+<tr>
+<td>WW3</td>
+<td>複合 WILD</td>
+<td>依序觸發 WW1 效果 → WW2 效果</td>
+</tr>
+</tbody>
+</table>
+<p>Skip 規則詳見 <a href="#Skip-功能">Skip</a> 章節。</p>
+<h3>倍數輪</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>陣列</td>
+<td>3x1（同時顯示 3 個倍數）</td>
+</tr>
+<tr>
+<td>一般結算</td>
+<td>主盤面有得分時，以第 2 行（中間格）倍數乘以盤面分數</td>
+</tr>
+<tr>
+<td>WW2 / WW3 觸發時</td>
+<td>三格倍數全部相加（規則詳見<a href="#特殊-WILD">特殊 WILD › WW2</a>）</td>
+</tr>
+</tbody>
+</table>
+<h4>倍數符號一覽（共 13 種）</h4>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>總表</td>
+<td>1X、2X、3X、5X、10X、15X、20X、25X、50X、100X、250X、500X、1000X</td>
+</tr>
+<tr>
+<td>Normal</td>
+<td>1X、2X、3X、5X、10X、15X、20X、25X、50X、100X</td>
+</tr>
+<tr>
+<td>Extra Bet</td>
+<td>移除 1X，增加 250X、500X、1000X</td>
+</tr>
+</tbody>
+</table>
+<h3>Extra Bet</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>加注倍率</td>
+<td>1.5× Normal Bet</td>
+</tr>
+<tr>
+<td>效果</td>
+<td>倍數輪符號變化詳見<a href="#倍數輪">倍數輪</a>章節</td>
+</tr>
+<tr>
+<td>開啟表演</td>
+<td>開啟時有 ExtraBet 開啟表演提示玩家（飛出倍數符號到倍數輪）</td>
+</tr>
+<tr>
+<td>倍數輪提示</td>
+<td>開啟時中獎框有對應視覺提示（外框或顏色變化）</td>
+</tr>
+<tr>
+<td>BET欄位提示</td>
+<td>BET欄位有開啟提示（外框發光或有顏色外框）</td>
+</tr>
+</tbody>
+</table>
+<h4>按鈕</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>按鈕文案</td>
+<td>僅顯示 EXTRABET，不顯示加注金額（文案參考 Languages）</td>
+</tr>
+<tr>
+<td>按鈕行為</td>
+<td>點擊切換 Extra Bet 開關，按鈕具開關示意</td>
+</tr>
+<tr>
+<td>操作限制</td>
+<td>僅 Idle 狀態可操作</td>
+</tr>
+</tbody>
+</table>
+<h3>Buy Feature</h3>
+<p>兩種 Buy Feature，共用同一個購買確認視窗，視窗內提供兩個選項供玩家選擇。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BF1</th>
+<th>BF2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>價格</td>
+<td>100× Bet</td>
+<td>500× Bet</td>
+</tr>
+<tr>
+<td>場次</td>
+<td>10 次 Free Spins</td>
+<td>10 次 Free Spins</td>
+</tr>
+<tr>
+<td>特殊效果</td>
+<td>WILD（一般 ＋ 特殊）出現機率提升</td>
+<td>每次必出一般 WW 或特殊 WILD</td>
+</tr>
+<tr>
+<td>倍數輪</td>
+<td>最低 2X，最大 1000X</td>
+<td>最低 2X，最大 1000X</td>
+</tr>
+<tr>
+<td>流程規則</td>
+<td>同 Base Game</td>
+<td>同 Base Game</td>
+</tr>
+</tbody>
+</table>
+<h4>入口按鈕</h4>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>按鈕文案</td>
+<td>僅顯示 BUY FEATURE，不顯示金額（文案參考 Languages）</td>
+</tr>
+<tr>
+<td>按鈕行為</td>
+<td>點擊開啟購買確認視窗</td>
+</tr>
+</tbody>
+</table>
+<h4>購買確認視窗</h4>
+<div style="display:flex;justify-content:center;padding:16px 0 24px;"><div style="border:2px solid #d0d7de;border-radius:12px;width:460px;overflow:hidden;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;box-shadow:0 4px 12px rgba(0,0,0,.08);"><div style="text-align:center;padding:14px 16px;font-weight:700;font-size:15px;letter-spacing:.06em;background:#f6f8fa;border-bottom:1px solid #d0d7de;">BUY FEATURE</div><div style="display:flex;gap:10px;padding:14px 14px 10px;"><div style="flex:1;border:2px solid #0969da;border-radius:8px;padding:14px 12px;background:#f0f6ff;display:flex;flex-direction:column;min-height:140px;"><div style="font-size:13px;color:#656d76;text-align:center;flex:1;line-height:1.8;">說明文案</div><div style="text-align:center;font-weight:700;font-size:16px;color:#0969da;padding-top:10px;border-top:1px solid #c2d8f5;margin-top:10px;">100.00</div></div><div style="flex:1;border:2px solid #d0d7de;border-radius:8px;padding:14px 12px;background:#fff;display:flex;flex-direction:column;min-height:140px;"><div style="font-size:13px;color:#656d76;text-align:center;flex:1;line-height:1.8;">說明文案</div><div style="text-align:center;font-weight:700;font-size:16px;color:#1f2328;padding-top:10px;border-top:1px solid #d0d7de;margin-top:10px;">500.00</div></div></div><div style="padding:12px 14px 12px;text-align:center;"><div style="font-size:13px;color:#656d76;letter-spacing:.08em;margin-bottom:8px;">BET</div><div style="display:flex;justify-content:center;align-items:center;gap:12px;"><button style="width:30px;height:30px;border:1px solid #d0d7de;border-radius:6px;background:#f6f8fa;font-size:16px;cursor:default;">−</button><span style="font-size:13px;color:#1f2328;min-width:80px;text-align:center;">1.00</span><button style="width:30px;height:30px;border:1px solid #d0d7de;border-radius:6px;background:#f6f8fa;font-size:16px;cursor:default;">+</button></div></div><div style="display:flex;gap:10px;padding:0 14px 14px;"><button style="flex:1;padding:9px 0;border:1px solid #d0d7de;border-radius:8px;background:#f6f8fa;font-size:14px;cursor:default;">取消</button><button style="flex:1;padding:9px 0;border:none;border-radius:8px;background:#0969da;color:#fff;font-size:14px;font-weight:600;cursor:default;">BUY</button></div></div></div>
+<table>
+<thead>
+<tr>
+<th>元素</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>選項</td>
+<td>同時顯示 BF1 / BF2 兩個選項供選擇</td>
+</tr>
+<tr>
+<td>規格說明文案</td>
+<td>說明各選項的 WILD 機率提升、倍數輪條件等（文案參考 Languages）</td>
+</tr>
+<tr>
+<td>顯示購買金額</td>
+<td>依當前 Bet 換算後顯示</td>
+</tr>
+<tr>
+<td>Bet 調整欄位</td>
+<td>可調整 Bet 金額</td>
+</tr>
+<tr>
+<td>購買確認按鈕</td>
+<td>確認購買所選選項</td>
+</tr>
+<tr>
+<td>關閉按鈕</td>
+<td>關閉視窗，Bet 不變</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>滾輪行為</h2>
+<p>SPIN 時，所有轉輪同時轉動，停輪則如下順序停輪。</p>
+<h3>停輪順序</h3>
+<pre><code>R1 → R2 → R3 → 中心輪 → 倍數輪
+</code></pre>
+<blockquote>
+<p>一般轉輪停輪期間，中心輪仍持續滾動，讓玩家可同時看到中心輪轉動→停輪的過程，接著停倍數輪。</p>
+</blockquote>
+<h3>整體流程</h3>
+<pre><code>IDLE → SPIN → 3x3 依序停輪（中心輪除外）→ 中心輪停輪 → 倍數輪停輪 → 依中心輪結果進行結算
+</code></pre>
+<h2>贏分秀線</h2>
+<p>演出順序：先秀線，再出現贏分看板</p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+<th>顯示內容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Show All Win</td>
+<td>同時秀出所有得分線</td>
+<td>得分線條、線號<br>得分符號表演<br>未連線獎項壓黑，倍數輪不壓黑</td>
+</tr>
+<tr>
+<td>Loop Win</td>
+<td>依得分線編號依序單條顯示，loop 完所有得分線後回到 Show All Win，再次進入 Loop Win 循環</td>
+<td>同上</td>
+</tr>
+</tbody>
+</table>
+<h3>觸發時機</h3>
+<table>
+<thead>
+<tr>
+<th>時機</th>
+<th>行為</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>贏分演出</td>
+<td>Show All Win</td>
+</tr>
+<tr>
+<td>結算後</td>
+<td>Show All Win → Loop Win 循環</td>
+</tr>
+</tbody>
+</table>
+<h2>贏分看板</h2>
+<p>贏分看板的出現與收起時機詳見遊戲流程圖。</p>
+<h3>看板類型</h3>
+<table>
+<thead>
+<tr>
+<th>類型</th>
+<th>觸發情境</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>純分數版</td>
+<td>一般 / WW、WW1</td>
+<td>顯示單一得分數字</td>
+</tr>
+<tr>
+<td>倍數版</td>
+<td>WW2、WW3</td>
+<td>分前後兩段：前段顯示盤面贏分，後段空白供倍數輪倍數收集，收集完成後兩數相乘顯示總分</td>
+</tr>
+</tbody>
+</table>
+<h3>動態尺寸</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>尺寸調整</td>
+<td>看板寬度隨分數位數動態調整</td>
+</tr>
+<tr>
+<td>最大寬度</td>
+<td>不超過 3×3 主盤面寬度範圍</td>
+</tr>
+<tr>
+<td>超出處理</td>
+<td>縮小分數字體大小，看板外框維持不變</td>
+</tr>
+</tbody>
+</table>
+<h2>Winframe</h2>
+<p>Winframe 具有兩種顯示模式：跑馬燈與贏分資訊。</p>
+<h3>跑馬燈</h3>
+<p>顯示遊戲特色介紹等循環文案。文案內容詳見文案。</p>
+<p><strong>文字捲動規則</strong></p>
+<table>
+<thead>
+<tr>
+<th>情境</th>
+<th>行為</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文字長度在範圍內</td>
+<td>靜態顯示 1500ms → 切換下一句</td>
+</tr>
+<tr>
+<td>文字長度超出範圍</td>
+<td>出現後靜置 1500ms → 往左捲動直至完整顯示 → 停止 1500ms → 切換下一句</td>
+</tr>
+<tr>
+<td>最後一句結束後</td>
+<td>循環回第一句</td>
+</tr>
+</tbody>
+</table>
+<h3>贏分資訊</h3>
+<p>贏分結算後，於得分線 Loop 期間顯示各得分線分數。顯示格式詳見文案。</p>
+<h2>大獎表演</h2>
+<p>升階式表演，從 BIG WIN 開始，依最終得分倍數決定換階時機與最高階層。得分倍數以 Normal Bet 數值計算。</p>
+<h3>觸發門檻</h3>
+<table>
+<thead>
+<tr>
+<th>階層</th>
+<th>觸發條件（Normal Bet 倍數）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BIG WIN</td>
+<td>≥ 5x</td>
+</tr>
+<tr>
+<td>MEGA WIN</td>
+<td>≥ 15x</td>
+</tr>
+<tr>
+<td>SUPER WIN</td>
+<td>≥ 30x</td>
+</tr>
+</tbody>
+</table>
+<h3>升階規則</h3>
+<table>
+<thead>
+<tr>
+<th>達成階層</th>
+<th>換階時機</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BIG WIN</td>
+<td>固定表演時長，不換階</td>
+</tr>
+<tr>
+<td>MEGA WIN</td>
+<td>滾分至總得分 1/2 時，BIG WIN → MEGA WIN</td>
+</tr>
+<tr>
+<td>SUPER WIN</td>
+<td>滾分至總得分 1/3 時，BIG WIN → MEGA WIN；2/3 時，MEGA WIN → SUPER WIN</td>
+</tr>
+</tbody>
+</table>
+<p>Skip 規則詳見 <a href="#Skip-功能">Skip</a> 章節。</p>
+<h2>二段加速</h2>
+<p><strong>預設狀態</strong>：Normal</p>
+<table>
+<thead>
+<tr>
+<th>模式</th>
+<th>效果</th>
+<th>備註</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Normal</td>
+<td>標準速度，Spin 時各輪同時滾動<br>停輪時依照停輪順序<br>有瞇牌</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Quick Mode</td>
+<td>各輪同時滾動、同時停輪<br>無瞇牌<br>特殊 WW 的表演不加速</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Turbo Mode</td>
+<td>基於 Quick Mode，整體加速 1.8x（暫定）</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h2>Auto Play</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>次數</td>
+<td>50、100、200、500、999、∞</td>
+</tr>
+<tr>
+<td>二段加速</td>
+<td>Auto Play 進行中仍可調整</td>
+</tr>
+</tbody>
+</table>
+<h2>瞇牌表演</h2>
+<table>
+<thead>
+<tr>
+<th>觸發條件</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>前三輪盤面贏分 ≥ 5X</td>
+<td>倍數輪進行瞇牌表演</td>
+</tr>
+<tr>
+<td>中心輪停輪為 WW2 或 WW3</td>
+<td>倍數輪進行瞇牌表演</td>
+</tr>
+<tr>
+<td>Quick / Turbo 加速模式</td>
+<td>無瞇牌表演</td>
+</tr>
+</tbody>
+</table>
+<p>Skip 規則詳見 <a href="#Skip-功能">Skip</a> 章節。</p>
+<h2>Skip 功能</h2>
+<p>玩家可點擊畫面任意位置或 Spin 按鈕跳過表演，直接顯示最終結果。Auto 模式下亦可操作。</p>
+<table>
+<thead>
+<tr>
+<th>表演項目</th>
+<th>可否 Skip</th>
+<th>觸發後延遲</th>
+<th>Skip 後結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>瞇牌表演</td>
+<td>可</td>
+<td>300ms</td>
+<td>表演收起，完全停輪</td>
+</tr>
+<tr>
+<td>大獎表演</td>
+<td>可</td>
+<td>300ms</td>
+<td>跳至最終贏分顯示</td>
+</tr>
+<tr>
+<td>WW1 分散 WILD</td>
+<td>可</td>
+<td>300ms</td>
+<td>跳至分散完成結果，接著演出連線中獎或無中獎結束</td>
+</tr>
+<tr>
+<td>WW2 倍數輪中獎框擴展</td>
+<td>不可</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td>WW2 收集倍數</td>
+<td>可</td>
+<td>300ms</td>
+<td>跳至贏分看板顯示最終收集倍數，接著演出分數相乘</td>
+</tr>
+<tr>
+<td>WW3 分散 WILD ＋ 倍數輪中獎框擴展</td>
+<td>可</td>
+<td>300ms</td>
+<td>跳至分散完成結果 ＋ 倍數輪中獎框完成擴展，接著演出連線中獎或無中獎結束</td>
+</tr>
+<tr>
+<td>WW3 收集倍數</td>
+<td>可</td>
+<td>300ms</td>
+<td>跳至贏分看板顯示最終收集倍數，接著演出分數相乘</td>
+</tr>
+</tbody>
+</table>
+<h2>預設盤面</h2>
+<p>開啟 Extra Bet 時，盤面換成 Extra Bet 預設盤面；關閉時盤面不變動，倍數輪切回 Normal Bet 預設，並關閉 Extra Bet 開啟的提示。</p>
+<h3>Normal Bet</h3>
+<div style="margin:14px 0 22px;"><table style="border-collapse:collapse;table-layout:fixed;"><thead><tr><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R1</th><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R2</th><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R3</th><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R4</th></tr></thead><tbody><tr><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M1</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">WW</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M2</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">20x</td></tr><tr><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M1</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">WW3</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M2</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">100x</td></tr><tr><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M1</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">WW</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M2</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">15x</td></tr></tbody></table></div>
+<h3>Extra Bet</h3>
+<div style="margin:14px 0 22px;"><table style="border-collapse:collapse;table-layout:fixed;"><thead><tr><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R1</th><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R2</th><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R3</th><th style="width:58px;height:20px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;background:#f6f8fa;font-size:11px;font-weight:600;color:#656d76;letter-spacing:.04em;">R4</th></tr></thead><tbody><tr><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M1</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">WW</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M2</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">500x</td></tr><tr><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M1</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">WW3</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M2</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">1000x</td></tr><tr><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M1</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">WW</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">M2</td><td style="width:58px;height:46px;text-align:center;vertical-align:middle;border:1px solid #d0d7de;padding:0;font-size:13px;font-weight:600;color:#1f2328;">250x</td></tr></tbody></table></div>
+<hr />
+<h2>Loading 頁</h2>
+<p>移除 Click to Play 按鈕，loading 完成直接進入遊戲。文字內容詳見文案。</p>
+<h2>開場表演</h2>
+<p>預設盤面 Symbol 由左上至右下依序出現，接續掃光後整體盤面外框發光。</p>
+<p><strong>進入遊戲順序</strong></p>
+<pre><code>進入遊戲 &gt; 開場表演 &gt; 左側系統介面彈出 &gt; BG Idle 畫面
+</code></pre>
+<h2>文案</h2>
+<p><a href="https://docs.google.com/spreadsheets/d/1jlM9VqgTYM2dzKOPxe9EnAUQcnzOyuSu2H9LSo-Cq-Y/edit?gid=1918939290#gid=1918939290" target="_blank" rel="noopener noreferrer">Languages/Help/Loading</a></p>
+<h2>Revision History</h2>
+<table>
+<thead>
+<tr>
+<th>版本</th>
+<th>日期</th>
+<th>修改人</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.1</td>
+<td>2026-05-11</td>
+<td>—</td>
+<td>初稿建立</td>
+</tr>
+</tbody>
+</table>
+</main>
+<script>
+function slugify(text) {
+  return text.trim().replace(/\s+/g, '-').replace(/[<>"\\/?#[\]{}|^`]/g, '');
+}
+const toc = document.getElementById('toc');
+const headings = [...document.querySelectorAll('h2,h3')];
+headings.forEach((el, i) => { el.id = slugify(el.textContent) || ('h' + i); });
+let currentSubs = null;
+headings.forEach((el, i) => {
+  if (el.tagName === 'H2') {
+    let hasSub = false;
+    for (let j = i + 1; j < headings.length; j++) {
+      if (headings[j].tagName === 'H2') break;
+      if (headings[j].tagName === 'H3') { hasSub = true; break; }
+    }
+    const a = document.createElement('a');
+    a.href = '#' + el.id;
+    a.textContent = el.textContent;
+    a.className = 'lv2';
+    if (hasSub) {
+      const row = document.createElement('div');
+      row.className = 'toc-row';
+      const arrow = document.createElement('span');
+      arrow.textContent = '▶';
+      arrow.className = 'toc-arrow';
+      row.appendChild(arrow);
+      row.appendChild(a);
+      const subs = document.createElement('div');
+      subs.style.display = 'none';
+      toc.appendChild(row);
+      toc.appendChild(subs);
+      arrow.addEventListener('click', () => {
+        const hidden = subs.style.display === 'none';
+        subs.style.display = hidden ? '' : 'none';
+        arrow.textContent = hidden ? '▼' : '▶';
+      });
+      currentSubs = subs;
+    } else {
+      toc.appendChild(a);
+      currentSubs = null;
+    }
+  } else {
+    const a = document.createElement('a');
+    a.href = '#' + el.id;
+    a.textContent = el.textContent;
+    a.className = 'lv3';
+    (currentSubs || toc).appendChild(a);
+  }
+});
+const firstP = document.querySelector('h1 + p');
+if (firstP) firstP.className = 'meta';
+</script>
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+mermaid.initialize({startOnLoad:false, theme:'default'});
+mermaid.run();
+</script>
+</body>
+</html>

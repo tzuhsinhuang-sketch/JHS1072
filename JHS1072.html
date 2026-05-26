@@ -68,14 +68,15 @@ hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-details { margin: 12px 0 22px; border: 1px solid var(--border); border-radius: 6px; }
+details { margin: 12px 0 22px; border: 1px solid var(--border); border-radius: 6px; width: 100%; }
 details summary { padding: 10px 14px; cursor: pointer; color: var(--accent); font-weight: 600; user-select: none; list-style: none; }
 details summary::-webkit-details-marker { display: none; }
 details summary::before { content: '▶ '; font-size: 14px; }
 details[open] summary::before { content: '▼ '; }
 details summary:hover { background: var(--accent-dim); border-radius: 6px; }
 details[open] summary { border-bottom: 1px solid var(--border); border-radius: 6px 6px 0 0; }
-details > .mermaid { padding: 20px; background: var(--surface); border-radius: 0 0 6px 6px; display: flex; justify-content: center; }
+details > .mermaid { padding: 20px; background: var(--surface); border-radius: 0 0 6px 6px; overflow-x: auto; }
+details > .mermaid svg { display: block; }
 #sidebar .toc-row { display: flex; align-items: center; margin-top: 6px; }
 #sidebar .toc-row a.lv2 { padding-left: 4px; margin-top: 0; flex: 1; }
 #sidebar .toc-arrow { font-size: 10px; color: var(--muted); cursor: pointer; padding: 6px 2px 6px 10px; user-select: none; flex-shrink: 0; }
@@ -176,7 +177,7 @@ details > .mermaid { padding: 20px; background: var(--surface); border-radius: 0
 </tr>
 <tr>
 <td>WW3</td>
-<td>WW1 ＋ WW2 雙效果同時觸發</td>
+<td>同時具備 WW1 與 WW2 效果，依序觸發</td>
 </tr>
 <tr>
 <td>Extra Bet</td>
@@ -719,7 +720,7 @@ graph LR
 <tr>
 <td>Quick Mode</td>
 <td>各輪同時滾動、同時停輪<br>無瞇牌<br>特殊 WW 的表演不加速</td>
-<td>—</td>
+<td>特殊 WW 飛散、倍數等演出仍以正常速度播放，其餘轉輪行為維持 Quick 速度</td>
 </tr>
 <tr>
 <td>Turbo Mode</td>
@@ -841,6 +842,8 @@ graph LR
 <p><strong>進入遊戲順序</strong></p>
 <pre><code>進入遊戲 &gt; 開場表演 &gt; 左側系統介面彈出 &gt; BG Idle 畫面
 </code></pre>
+<h2>GameHistory</h2>
+<p><a href="https://docs.google.com/spreadsheets/d/1jlM9VqgTYM2dzKOPxe9EnAUQcnzOyuSu2H9LSo-Cq-Y/edit?gid=980882853#gid=980882853" target="_blank" rel="noopener noreferrer">GameHistory</a></p>
 <h2>文案</h2>
 <p><a href="https://docs.google.com/spreadsheets/d/1jlM9VqgTYM2dzKOPxe9EnAUQcnzOyuSu2H9LSo-Cq-Y/edit?gid=1918939290#gid=1918939290" target="_blank" rel="noopener noreferrer">Languages/Help/Loading</a></p>
 <h2>Revision History</h2>
@@ -917,8 +920,23 @@ if (firstP) firstP.className = 'meta';
 </script>
 <script type="module">
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-mermaid.initialize({startOnLoad:false, theme:'default'});
-mermaid.run();
+mermaid.initialize({startOnLoad:false, theme:'default', useMaxWidth: true});
+const allDetails = [...document.querySelectorAll('details')];
+allDetails.forEach(d => d.open = true);
+void document.body.offsetHeight;
+mermaid.run().then(() => {
+  document.querySelectorAll('.mermaid svg').forEach(svg => {
+    const vb = svg.getAttribute('viewBox');
+    if (vb) {
+      const parts = vb.trim().split(/\s+/).map(parseFloat);
+      svg.removeAttribute('width');
+      svg.removeAttribute('height');
+      svg.style.width = parts[2] + 'px';
+      svg.style.height = parts[3] + 'px';
+    }
+  });
+  allDetails.forEach(d => d.open = false);
+});
 </script>
 </body>
 </html>

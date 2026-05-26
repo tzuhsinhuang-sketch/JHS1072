@@ -33,6 +33,13 @@
     .card-title { font-size: 16px; font-weight: 600; }
     .card-meta { font-size: 13px; color: var(--muted); }
     .card-arrow { color: var(--muted); font-size: 18px; }
+    .card-dl {
+      font-size: 12px; color: var(--muted); text-decoration: none;
+      border: 1px solid var(--border); border-radius: 6px;
+      padding: 5px 10px; margin-left: 12px; white-space: nowrap;
+      transition: color .15s, border-color .15s;
+    }
+    .card-dl:hover { color: var(--accent); border-color: var(--accent); }
   </style>
 </head>
 <body>
@@ -41,14 +48,17 @@
     <p>JoyPeak Slot Spec</p>
   </div>
   <div class="list">
-    <a class="card" href="JHS1072.html">
-      <div class="card-left">
-        <span class="card-code">JHS1072</span>
-        <span class="card-title">海底龍宮</span>
-        <span class="card-meta">v0.1　｜　2026-05-11</span>
-      </div>
-      <span class="card-arrow">›</span>
-    </a>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <a class="card" href="JHS1072.html" style="flex:1;">
+        <div class="card-left">
+          <span class="card-code">JHS1072</span>
+          <span class="card-title">海底龍宮</span>
+          <span class="card-meta">v0.1　｜　2026-05-11</span>
+        </div>
+        <span class="card-arrow">›</span>
+      </a>
+      <a class="card-dl" href="JHS1072.md" download>↓ .md</a>
+    </div>
   </div>
 </body>
 </html>

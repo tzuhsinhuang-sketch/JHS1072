@@ -221,14 +221,15 @@ hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-details { margin: 12px 0 22px; border: 1px solid var(--border); border-radius: 6px; }
+details { margin: 12px 0 22px; border: 1px solid var(--border); border-radius: 6px; width: 100%; }
 details summary { padding: 10px 14px; cursor: pointer; color: var(--accent); font-weight: 600; user-select: none; list-style: none; }
 details summary::-webkit-details-marker { display: none; }
 details summary::before { content: '▶ '; font-size: 14px; }
 details[open] summary::before { content: '▼ '; }
 details summary:hover { background: var(--accent-dim); border-radius: 6px; }
 details[open] summary { border-bottom: 1px solid var(--border); border-radius: 6px 6px 0 0; }
-details > .mermaid { padding: 20px; background: var(--surface); border-radius: 0 0 6px 6px; display: flex; justify-content: center; }
+details > .mermaid { padding: 20px; background: var(--surface); border-radius: 0 0 6px 6px; overflow-x: auto; }
+details > .mermaid svg { display: block; }
 #sidebar .toc-row { display: flex; align-items: center; margin-top: 6px; }
 #sidebar .toc-row a.lv2 { padding-left: 4px; margin-top: 0; flex: 1; }
 #sidebar .toc-arrow { font-size: 10px; color: var(--muted); cursor: pointer; padding: 6px 2px 6px 10px; user-select: none; flex-shrink: 0; }
@@ -324,8 +325,23 @@ def build(md_path: Path):
 <script>{JS}</script>
 <script type="module">
 import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
-mermaid.initialize({{startOnLoad:false, theme:'default'}});
-mermaid.run();
+mermaid.initialize({{startOnLoad:false, theme:'default', useMaxWidth: true}});
+const allDetails = [...document.querySelectorAll('details')];
+allDetails.forEach(d => d.open = true);
+void document.body.offsetHeight;
+mermaid.run().then(() => {{
+  document.querySelectorAll('.mermaid svg').forEach(svg => {{
+    const vb = svg.getAttribute('viewBox');
+    if (vb) {{
+      const parts = vb.trim().split(/\s+/).map(parseFloat);
+      svg.removeAttribute('width');
+      svg.removeAttribute('height');
+      svg.style.width = parts[2] + 'px';
+      svg.style.height = parts[3] + 'px';
+    }}
+  }});
+  allDetails.forEach(d => d.open = false);
+}});
 </script>
 </body>
 </html>"""

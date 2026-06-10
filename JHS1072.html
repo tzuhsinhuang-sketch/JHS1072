@@ -531,8 +531,46 @@ graph LR
 </tr>
 </tbody>
 </table>
-<h4>BF2 押注額限制</h4>
-<p>500X Buy Feature 有最高押注額限制，超過門檻時 BF2 選項鎖定不可選擇。</p>
+<h4>選項互動規則</h4>
+<p><strong>初始狀態</strong>（剛進入確認視窗時）</p>
+<table>
+<thead>
+<tr>
+<th>狀態</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>選項顯示</td>
+<td>BF1 / BF2 兩個選項皆亮起，無預設選取</td>
+</tr>
+<tr>
+<td>BUY 按鈕</td>
+<td>反灰不可用，需選取任一選項後才可使用</td>
+</tr>
+</tbody>
+</table>
+<p><strong>選取行為</strong></p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>點擊任一選項</td>
+<td>該選項亮起並加強調，另一選項押暗；BUY 按鈕啟用</td>
+</tr>
+<tr>
+<td>點擊已押暗的選項</td>
+<td>該選項亮起，原選取選項押暗</td>
+</tr>
+</tbody>
+</table>
+<p><strong>BF2 押注額限制</strong></p>
 <table>
 <thead>
 <tr>
@@ -543,15 +581,52 @@ graph LR
 <tbody>
 <tr>
 <td>限制條件</td>
-<td>Total Bet ≦ Bet_Currency 2.0 第 26 組時，BF2 可使用</td>
+<td>Total Bet ≦ Bet_Currency 2.0 第 26 組時，BF2 才可使用</td>
 </tr>
 <tr>
-<td>超過門檻時</td>
-<td>BF2 選項鎖定（不可點擊），自動切換至 BF1；不顯示額外說明文案</td>
+<td>超過上限時</td>
+<td>BF2 鎖定（不可點擊），不顯示說明文案</td>
 </tr>
 <tr>
 <td>解鎖時機</td>
-<td>Bet 調回門檻內後即時解鎖，BF2 恢復可選取</td>
+<td>Bet 調回上限內後即時解鎖</td>
+</tr>
+</tbody>
+</table>
+<p><strong>BF2 超過押注上限時的選項狀態</strong></p>
+<table>
+<thead>
+<tr>
+<th>情境</th>
+<th>BF1 狀態</th>
+<th>BF2 狀態</th>
+<th>BUY 按鈕</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>未選取任一選項時，Bet 超過上限（含開啟視窗前已超過）</td>
+<td>維持亮起，不預設選取</td>
+<td>鎖定（不可點擊）</td>
+<td>維持反灰</td>
+</tr>
+<tr>
+<td>已選取 BF1 時，Bet 超過上限</td>
+<td>維持選取狀態</td>
+<td>鎖定</td>
+<td>維持啟用</td>
+</tr>
+<tr>
+<td>已選取 BF2 時，Bet 超過上限</td>
+<td>自動切換至 BF1（亮起 ＋ 強調）</td>
+<td>鎖定</td>
+<td>維持啟用</td>
+</tr>
+<tr>
+<td>自動切換至 BF1 後，Bet 調回上限內</td>
+<td>維持選取狀態</td>
+<td>解鎖恢復可點擊</td>
+<td>維持啟用</td>
 </tr>
 </tbody>
 </table>
@@ -937,6 +1012,12 @@ graph LR
 <td>2026-06-10</td>
 <td>子馨</td>
 <td>新增 BF2 押注額限制規格（Total Bet 超過 Bet_Currency 2.0 第 26 組時鎖定，自動切換 BF1，降回後即時解鎖）；移除鎖定說明文案，改為單純視覺鎖定不可點擊</td>
+</tr>
+<tr>
+<td>v0.1.4</td>
+<td>2026-06-10</td>
+<td>子馨</td>
+<td>補充購買確認視窗選項互動規則：初始狀態（兩選項亮起，BUY 反灰）、選取行為、BF2 超過押注上限時各情境的 BF1／BF2 狀態與 BUY 按鈕對應說明</td>
 </tr>
 </tbody>
 </table>

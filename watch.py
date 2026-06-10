@@ -178,7 +178,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; b
 #sidebar .lv2 { font-weight: 600; color: var(--text); margin-top: 6px; }
 #sidebar .lv3 { padding-left: 22px; }
 
-#main { margin-left: 255px; max-width: 900px; padding: 48px 40px; }
+#main { margin-left: 255px; padding: 48px 60px; }
 
 h1 { font-size: 30px; font-weight: 700; margin-bottom: 6px; }
 .meta { color: var(--muted); font-size: 15px; margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
@@ -205,6 +205,8 @@ li { margin-bottom: 4px; line-height: 1.6; }
 strong { color: var(--text); }
 
 table { width: 100%; border-collapse: collapse; margin: 12px 0 22px; font-size: 16px; }
+td, th { word-wrap: break-word; }
+td:first-child, th:first-child { width: 18%; }
 thead th { background: var(--table-head); color: var(--muted); font-size: 15px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; padding: 10px 14px; border: 1px solid var(--border); text-align: left; }
 tbody td { padding: 9px 14px; border: 1px solid var(--border); vertical-align: top; }
 tbody tr:nth-child(even) { background: var(--row-alt); }
